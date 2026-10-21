@@ -1,0 +1,69 @@
+runConfig:
+  # One CPU keeps the Cloud Run cost low; 1 GiB leaves headroom for Next SSR.
+  cpu: 1
+  memoryMiB: 1024
+  # Scale to zero when idle (school hours only in practice).
+  minInstances: 0
+  maxInstances: 1
+  concurrency: 80
+
+env:
+  # ------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Inventory source — the staff-maintained Google Sheet.
+  # BUILD availability lets the prerendered pages (/, /analytics, /rooms, /items)
+  # start with live rows; RUNTIME keeps ISR refreshes working every 60s.
+  # 
+  - variable: GOOGLE_SHEET_ID
+    value: 1Goz9kLkPgmEhyTvaclDPx8OaNzAYWBkcwpsmvyp12P4
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: GOOGLE_SHEET_NAME
+    value: Sheet1
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: SHEET_REVALIDATE_SECONDS
+    value: "60"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ---------------------------------------------------------------------------
+  # Administrator sign-in. Change ADMIN_PASSWORD before going live with staff.
+  # ---------------------------------------------------------------------------
+  - variable: ADMIN_EMAIL
+    value: admin@gitanjalischools.com
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: ADMIN_PASSWORD
+    value: admin123
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ---------------------------------------------------------------------------
+  # Session cookie signing key.
+  # Must be available at BUILD *and* RUNTIME: Next.js inlines env values into the
+  # edge-runtime middleware at build time, while the sign-in server action reads
+  # them per request. If these differ, every login is rejected and the user is
+  # bounced back to /login.
+  # ---------------------------------------------------------------------------
+  - variable: AUTH_SECRET
+    value: GIYfBn28K1BvnUBdYDFArb681fCO_XGzGXP_08_Ana4
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ---------------------------------------------------------------------------
+  # Housekeeping
+  # ---------------------------------------------------------------------------
+  - variable: NEXT_TELEMETRY_DISABLED
+    value: "1"
+    availability:
+      - BUILD
+      - RUNTIME
