@@ -407,7 +407,23 @@ export function AssetExplorer({
               </span>
             ) : null}
           </p>
-          <div className="flex items-center gap-2 text-xs text-ink-500">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-ink-500">
+            <select
+              value={`${sort.key}:${sort.dir}`}
+              onChange={(event) => {
+                const [key, dir] = event.target.value.split(":");
+                setSort({ key: key as SortKey, dir: dir as "asc" | "desc" });
+              }}
+              className="h-8 rounded-lg border border-ink-200 bg-white px-2 text-xs md:hidden"
+              aria-label="Sort rows"
+            >
+              <option value="default:asc">Register order</option>
+              <option value="item:asc">Item A–Z</option>
+              <option value="qty:desc">Quantity: high to low</option>
+              <option value="qty:asc">Quantity: low to high</option>
+              <option value="room:asc">Room A–Z</option>
+              <option value="floor:asc">Floor order</option>
+            </select>
             <span className="hidden sm:inline">Rows per page</span>
             <select
               value={pageSize}
@@ -424,7 +440,53 @@ export function AssetExplorer({
           </div>
         </div>
 
-        <div className="nice-scroll overflow-x-auto">
+        {/* Phones: card list instead of a horizontally scrolling table. */}
+        <ul className="divide-y divide-ink-50 md:hidden">
+          {pageRows.map((row) => {
+            const notes = `${row.serialNo ?? ""} ${row.modelNo ?? ""}`;
+            const qrPending = QR_PATTERN.test(notes);
+
+            return (
+              <li key={row.id}>
+                <button
+                  type="button"
+                  onClick={() => setSelected(row)}
+                  className="flex w-full items-start gap-3 px-4 py-3.5 text-left transition active:bg-ink-50"
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-start justify-between gap-2">
+                      <span className="text-[13px] font-semibold leading-snug text-ink-900">
+                        {row.itemName}
+                      </span>
+                      <span className="shrink-0 rounded-lg bg-ink-50 px-2 py-0.5 text-xs font-semibold tabular-nums text-ink-800">
+                        {formatNumber(row.quantity)}
+                      </span>
+                    </span>
+                    <span className="mt-1 block truncate text-[11px] text-ink-500">
+                      {row.room} · {row.id}
+                    </span>
+                    <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                      <Pill>{row.floor}</Pill>
+                      <span className="rounded-md bg-ink-50 px-1.5 py-0.5 text-[10px] text-ink-500">
+                        {row.roomType}
+                      </span>
+                      {qrPending ? (
+                        <Pill tone="gold">QR pending</Pill>
+                      ) : row.serialNo ? (
+                        <span className="max-w-[120px] truncate font-mono text-[10px] text-ink-400">
+                          {row.serialNo}
+                        </span>
+                      ) : null}
+                    </span>
+                  </span>
+                  <ChevronRightIcon className="mt-1 h-4 w-4 shrink-0 text-ink-300" />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="nice-scroll hidden overflow-x-auto md:block">
           <table className="w-full min-w-[860px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-ink-100 bg-ink-50/60">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { BuildingIcon } from "@/components/icons";
+import { signOut } from "@/app/login/actions";
+import { BuildingIcon, LogOutIcon } from "@/components/icons";
 import { MobileNav } from "@/components/shell/nav";
 import { DataSourcePill } from "@/components/ui/primitives";
 import { dataSource } from "@/lib/data";
@@ -40,10 +41,26 @@ export function Topbar() {
                 </span>
               </span>
             </div>
+            <form action={signOut} className="lg:hidden">
+              <button
+                type="submit"
+                aria-label="Sign out"
+                title="Sign out"
+                className="grid h-9 w-9 place-items-center rounded-xl border border-ink-200 bg-white text-ink-500 transition hover:border-ink-300 hover:text-ink-900"
+              >
+                <LogOutIcon className="h-4 w-4" />
+              </button>
+            </form>
           </div>
         </div>
 
-        <MobileNav />
+        <div className="relative lg:hidden">
+          <MobileNav />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 -right-4 w-10 bg-gradient-to-l from-white to-transparent"
+          />
+        </div>
       </div>
     </header>
   );

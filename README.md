@@ -210,5 +210,9 @@ src/
 - Charts are hand-built SVG (`src/components/charts/`) — bar, pie and line — so
   they render on the server, scale with their container, and add no chart-library
   weight to the bundle. Hover any bar, slice or point for a native tooltip.
+- Mobile-first layout: below `md` the register switches from a table to a tappable
+  card list, below `sm` the bar charts render as horizontal bars and the line chart
+  drops its axis labels, and the sign-in page hides its marketing panel on phones.
+  Inputs are 16px on small screens so iOS doesn't zoom on focus.
 - Served entirely from React Server Components; only the register, room grid and
   catalogue ship client JavaScript.

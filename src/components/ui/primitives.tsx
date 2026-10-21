@@ -46,7 +46,9 @@ export function PageHeader({
           </p>
         ) : null}
       </div>
-      {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+      {actions ? (
+        <div className="flex flex-wrap items-center gap-2">{actions}</div>
+      ) : null}
     </header>
   );
 }
@@ -108,7 +110,7 @@ export function SectionCard({
   bodyClassName?: string;
 }) {
   return (
-    <section className={cn("card flex flex-col", className)}>
+    <section className={cn("card flex min-w-0 flex-col", className)}>
       <div className="flex items-start justify-between gap-4 border-b border-ink-100 px-5 py-4 sm:px-6">
         <div>
           <h2 className="text-sm font-semibold text-ink-900">{title}</h2>
@@ -360,7 +362,10 @@ export function DataSourcePill({ live }: { live: boolean }) {
           live ? "bg-emerald-500" : "bg-ink-300",
         )}
       />
-      {live ? "Google Sheets · live" : "Excel snapshot"}
+      <span className="hidden sm:inline">
+        {live ? "Google Sheets · live" : "Excel snapshot"}
+      </span>
+      <span className="sm:hidden">{live ? "Live" : "Snapshot"}</span>
     </span>
   );
 }

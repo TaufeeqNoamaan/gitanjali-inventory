@@ -133,16 +133,16 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
           bodyClassName="p-0"
         >
           <div className="nice-scroll overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse text-sm">
+            <table className="w-full min-w-0 border-collapse text-sm">
               <thead>
                 <tr className="border-b border-ink-100 bg-ink-50/60">
-                  <th className="px-5 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400">
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 sm:px-5">
                     Room
                   </th>
-                  <th className="w-20 px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400">
+                  <th className="w-16 px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 sm:w-20 sm:px-4">
                     Qty
                   </th>
-                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400">
+                  <th className="hidden px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 sm:table-cell">
                     Serial
                   </th>
                 </tr>
@@ -153,7 +153,7 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
                     key={row.id}
                     className="border-b border-ink-50 last:border-0 hover:bg-ink-50/50"
                   >
-                    <td className="px-5 py-3">
+                    <td className="px-4 py-3 sm:px-5">
                       <Link
                         href={`/rooms/${roomSlugs[row.room] ?? ""}`}
                         className="font-medium text-ink-900 hover:underline"
@@ -163,11 +163,14 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
                       <p className="mt-0.5 text-[10px] text-ink-400">
                         {row.floor} · {row.roomType}
                       </p>
+                      <p className="mt-1 font-mono text-[10px] text-ink-500 sm:hidden">
+                        {row.serialNo ?? "No serial"}
+                      </p>
                     </td>
-                    <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-ink-800">
+                    <td className="px-3 py-3 text-right text-xs font-semibold tabular-nums text-ink-800 sm:px-4">
                       {formatNumber(row.quantity)}
                     </td>
-                    <td className="max-w-[220px] px-4 py-3">
+                    <td className="hidden max-w-[220px] px-4 py-3 sm:table-cell">
                       {row.serialNo ? (
                         <span className="block truncate font-mono text-[11px] text-ink-600">
                           {row.serialNo}

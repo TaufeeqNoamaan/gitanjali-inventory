@@ -48,15 +48,47 @@ export function BarChart({
     (best, entry, index) => (entry.value > data[best].value ? index : best),
     0,
   );
+  const rawMax = Math.max(...data.map((entry) => entry.value), 1);
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((step) => Math.round(max * step));
 
   return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      className="h-auto w-full"
-      role="img"
-      aria-label={`Bar chart of ${unitLabel} by category`}
-    >
+    <>
+      {/* Phones: horizontal bars keep labels and values legible. */}
+      <ul className="space-y-3.5 sm:hidden">
+        {data.map((entry, index) => (
+          <li key={entry.label}>
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="min-w-0 truncate text-[13px] font-medium text-ink-800">
+                {entry.label}
+              </span>
+              <span className="shrink-0 text-xs font-semibold tabular-nums text-ink-800">
+                {formatNumber(entry.value)}
+                {valueSuffix}
+              </span>
+            </div>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-ink-50">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${Math.max((entry.value / rawMax) * 100, entry.value > 0 ? 3 : 0)}%`,
+                  backgroundColor:
+                    index === peak ? CHART_COLORS[3] : CHART_COLORS[1],
+                }}
+              />
+            </div>
+            {entry.meta ? (
+              <p className="mt-1 text-[10px] text-ink-400">{entry.meta}</p>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="hidden h-auto w-full sm:block"
+        role="img"
+        aria-label={`Bar chart of ${unitLabel} by category`}
+      >
       <text
         x={margin.left}
         y={14}
@@ -159,6 +191,7 @@ export function BarChart({
         stroke="#cfd8e9"
         strokeWidth={1}
       />
-    </svg>
+      </svg>
+    </>
   );
 }

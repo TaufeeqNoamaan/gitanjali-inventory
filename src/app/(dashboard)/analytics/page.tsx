@@ -172,6 +172,11 @@ export default async function AnalyticsPage() {
             suffix="%"
             unitLabel="share of units"
           />
+          <p className="mt-2 text-[11px] leading-relaxed text-ink-400 sm:hidden">
+            Item rank 1–20 along the x-axis; the highlighted point is the top 20
+            together — {paretoPoints[paretoPoints.length - 1]?.value}% of every
+            unit on campus.
+          </p>
         </SectionCard>
 
         <SectionCard

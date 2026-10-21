@@ -65,6 +65,7 @@ export function LineChart({
         fontWeight={700}
         letterSpacing={1.4}
         fill="#a6b5d1"
+        className="hidden sm:block"
       >
         {`CUMULATIVE ${unitLabel.toUpperCase()}`}
       </text>
@@ -87,6 +88,7 @@ export function LineChart({
               textAnchor="end"
               fontSize={10}
               fill="#748cb4"
+              className="hidden sm:block"
             >
               {Math.round(tick)}
               {suffix}
@@ -127,6 +129,7 @@ export function LineChart({
               textAnchor="middle"
               fontSize={9.5}
               fill="#748cb4"
+              className="hidden sm:block"
             >
               {point.label}
             </text>

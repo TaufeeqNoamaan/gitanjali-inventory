@@ -85,7 +85,7 @@ export function MobileNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition",
+              "shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition",
               active
                 ? "border-ink-900 bg-ink-900 text-white"
                 : "border-ink-200 bg-white text-ink-600 hover:border-ink-300",

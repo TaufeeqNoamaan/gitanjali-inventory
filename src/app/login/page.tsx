@@ -15,8 +15,8 @@ export default async function LoginPage({
   const { next } = await searchParams;
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
-      <section className="relative flex flex-col justify-between overflow-hidden bg-ink-950 px-8 py-10 text-white sm:px-12 lg:px-14 lg:py-12">
+    <div className="grid min-h-[100dvh] lg:grid-cols-[1.05fr_1fr]">
+      <section className="relative hidden flex-col justify-between overflow-hidden bg-ink-950 px-8 py-10 text-white sm:px-12 lg:flex lg:px-14 lg:py-12">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(223,167,52,0.22),transparent_58%)]"
@@ -79,8 +79,21 @@ export default async function LoginPage({
         </p>
       </section>
 
-      <section className="flex items-center justify-center bg-ink-50 px-5 py-12 sm:px-8">
+      <section className="flex items-center justify-center bg-ink-50 px-5 py-10 sm:px-8 lg:py-12">
         <div className="w-full max-w-sm">
+          <div className="mb-8 flex items-center gap-3 lg:hidden">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 font-display text-lg text-ink-950">
+              G
+            </span>
+            <span className="leading-tight">
+              <span className="block font-display text-lg text-ink-950">
+                Gitanjali Schools
+              </span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-400">
+                Asset Register
+              </span>
+            </span>
+          </div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-600">
             Welcome back
           </p>
