@@ -108,7 +108,7 @@ export type RawAssetRow = {
 
 /**
  * Turns a raw spreadsheet row into an inventory record. Applied to both the
- * local snapshot and live Google Sheets data so both look identical downstream.
+ * local snapshot and live spreadsheet data so both look identical downstream.
  */
 export function normaliseAsset(row: RawAssetRow, index: number): Asset {
   const room = clean(row.room) ?? "Unassigned";

@@ -15,6 +15,8 @@ import {
   SectionCard,
   StatCard,
 } from "@/components/ui/primitives";
+import { PrintButton } from "@/components/print-button";
+import { PrintHeader, PrintSignature } from "@/components/print";
 import { getAssets, getItemBySlug, buildRoomSlugMap } from "@/lib/data";
 import { formatNumber, percent } from "@/lib/utils";
 
@@ -38,17 +40,13 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
     .filter((asset) => asset.itemName === item.name)
     .sort((a, b) => b.quantity - a.quantity);
 
-  const byFloor = new Map<string, { units: number; rows: number }>();
+  const byFloor = new Map<string, number>();
   for (const row of rows) {
-    const entry = byFloor.get(row.floor) ?? { units: 0, rows: 0 };
-    entry.units += row.quantity;
-    entry.rows += 1;
-    byFloor.set(row.floor, entry);
+    byFloor.set(row.floor, (byFloor.get(row.floor) ?? 0) + row.quantity);
   }
   const floorBars = item.floors.map((floor) => ({
     label: floor,
-    value: byFloor.get(floor)?.units ?? 0,
-    meta: `${formatNumber(byFloor.get(floor)?.rows ?? 0)} rows`,
+    value: byFloor.get(floor) ?? 0,
   }));
 
   const serials = rows
@@ -67,30 +65,45 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
 
   return (
     <div className="space-y-6">
-      <nav className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-ink-400">
-        <Link href="/items" className="hover:text-ink-700">
-          Item catalogue
-        </Link>
-        <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-ink-700">{item.name}</span>
-      </nav>
-
-      <PageHeader
-        eyebrow="Item profile"
+      <PrintHeader
         title={item.name}
-        description={`${formatNumber(item.units)} units spread across ${formatNumber(
+        subtitle={`${formatNumber(item.units)} units across ${formatNumber(
           item.rooms,
-        )} rooms on ${formatNumber(item.floors.length)} floors.`}
-        actions={
-          <Link
-            href={`/assets?item=${encodeURIComponent(item.name)}`}
-            className="btn-ghost"
-          >
-            <ArrowUpRightIcon className="h-4 w-4" />
-            Open in register
-          </Link>
-        }
+        )} rooms on ${formatNumber(item.floors.length)} floors`}
+        meta={`Serials recorded on ${formatNumber(serialisedRows)} of ${formatNumber(
+          item.records,
+        )} entries`}
       />
+
+      <div className="no-print">
+        <nav className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-ink-400">
+          <Link href="/items" className="hover:text-ink-700">
+            Item catalogue
+          </Link>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-ink-700">{item.name}</span>
+        </nav>
+
+        <PageHeader
+          eyebrow="Item profile"
+          title={item.name}
+          description={`${formatNumber(item.units)} units spread across ${formatNumber(
+            item.rooms,
+          )} rooms on ${formatNumber(item.floors.length)} floors.`}
+          actions={
+            <>
+              <PrintButton />
+              <Link
+                href={`/assets?item=${encodeURIComponent(item.name)}`}
+                className="btn-ghost"
+              >
+                <ArrowUpRightIcon className="h-4 w-4" />
+                Open in register
+              </Link>
+            </>
+          }
+        />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -210,6 +223,8 @@ export default async function ItemDetailPage({ params }: { params: Params }) {
           </SectionCard>
         </div>
       </div>
+
+      <PrintSignature label="Counted by" />
     </div>
   );
 }

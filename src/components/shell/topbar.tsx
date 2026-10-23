@@ -1,10 +1,9 @@
 import Link from "next/link";
 
 import { signOut } from "@/app/login/actions";
+import { BrandLogo } from "@/components/brand-logo";
 import { BuildingIcon, LogOutIcon } from "@/components/icons";
 import { MobileNav } from "@/components/shell/nav";
-import { DataSourcePill } from "@/components/ui/primitives";
-import { dataSource } from "@/lib/data";
 import { ADMIN_EMAIL } from "@/lib/auth";
 
 export function Topbar() {
@@ -13,10 +12,12 @@ export function Topbar() {
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Link href="/" className="lg:hidden">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 font-display text-base text-ink-950">
-                G
-              </span>
+            <Link
+              href="/"
+              className="lg:hidden"
+              aria-label="Gitanjali Schools home"
+            >
+              <BrandLogo className="h-6 sm:h-7" />
             </Link>
             <div className="hidden items-center gap-2 text-xs text-ink-500 lg:flex">
               <BuildingIcon className="h-4 w-4 text-ink-400" />
@@ -27,7 +28,6 @@ export function Topbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <DataSourcePill live={dataSource === "google-sheets"} />
             <div className="hidden items-center gap-2.5 border-l border-ink-100 pl-3 sm:flex">
               <span className="grid h-8 w-8 place-items-center rounded-full bg-ink-900 text-[10px] font-bold text-white">
                 AD

@@ -69,7 +69,7 @@ export function StatCard({
   return (
     <article
       className={cn(
-        "card card-pad relative overflow-hidden",
+        "card card-pad relative break-inside-avoid overflow-hidden",
         accent && "border-gold-200 bg-gradient-to-br from-gold-50 via-white to-white",
       )}
     >
@@ -315,57 +315,5 @@ export function EmptyState({
       </p>
       {action ? <div className="mt-2">{action}</div> : null}
     </div>
-  );
-}
-
-export function Logo({ compact = false }: { compact?: boolean }) {
-  return (
-    <Link
-      href="/"
-      className="group flex items-center gap-3 rounded-xl focus-visible:ring-offset-ink-950"
-    >
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 font-display text-lg text-ink-950 shadow-lg shadow-gold-900/20">
-        G
-      </span>
-      {compact ? null : (
-        <span className="leading-tight">
-          <span className="block font-display text-[17px] text-white">
-            Gitanjali Schools
-          </span>
-          <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-400">
-            Asset Register
-          </span>
-        </span>
-      )}
-    </Link>
-  );
-}
-
-export function DataSourcePill({ live }: { live: boolean }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold",
-        live
-          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-          : "border-ink-200 bg-white text-ink-500",
-      )}
-      title={
-        live
-          ? "Reading live rows from Google Sheets"
-          : "Serving the bundled Excel snapshot — add GOOGLE_SHEET_ID to go live"
-      }
-    >
-      <span
-        className={cn(
-          "h-1.5 w-1.5 rounded-full",
-          live ? "bg-emerald-500" : "bg-ink-300",
-        )}
-      />
-      <span className="hidden sm:inline">
-        {live ? "Google Sheets · live" : "Excel snapshot"}
-      </span>
-      <span className="sm:hidden">{live ? "Live" : "Snapshot"}</span>
-    </span>
   );
 }

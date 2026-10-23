@@ -10,6 +10,8 @@ import {
   DownloadIcon,
   SearchIcon,
 } from "@/components/icons";
+import { PrintButton } from "@/components/print-button";
+import { PrintHeader, PrintSignature } from "@/components/print";
 import { EmptyState, PageHeader, Pill } from "@/components/ui/primitives";
 import { FLOOR_ORDER } from "@/lib/normalize";
 import type { Asset } from "@/lib/types";
@@ -95,6 +97,18 @@ export function AssetExplorer({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [selected, setSelected] = useState<Asset | null>(null);
+  const [printReady, setPrintReady] = useState(false);
+
+  useEffect(() => {
+    const enable = () => setPrintReady(true);
+    const disable = () => setPrintReady(false);
+    window.addEventListener("beforeprint", enable);
+    window.addEventListener("afterprint", disable);
+    return () => {
+      window.removeEventListener("beforeprint", enable);
+      window.removeEventListener("afterprint", disable);
+    };
+  }, []);
 
   const floors = useMemo(
     () => FLOOR_ORDER.filter((entry) => assets.some((row) => row.floor === entry)),
@@ -255,19 +269,38 @@ export function AssetExplorer({
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        eyebrow="Register"
+      <PrintHeader
         title="Asset register"
-        description="Search and filter every recorded asset down to a single serial number."
-        actions={
-          <button type="button" onClick={exportCsv} className="btn-ghost">
-            <DownloadIcon className="h-4 w-4" />
-            Export CSV
-          </button>
+        subtitle={
+          activeFilters.length > 0
+            ? `Filters: ${activeFilters.map((filter) => filter.label).join(" · ")}${
+                query ? ` · “${query}”` : ""
+              }`
+            : "All assets in the register"
         }
+        meta={`${formatNumber(sorted.length)} rows · ${formatNumber(
+          totalUnits,
+        )} units`}
       />
 
-      <section className="card p-4">
+      <div className="no-print">
+        <PageHeader
+          eyebrow="Register"
+          title="Asset register"
+          description="Search and filter every recorded asset down to a single serial number."
+          actions={
+            <>
+              <PrintButton onBeforePrint={() => setPrintReady(true)} />
+              <button type="button" onClick={exportCsv} className="btn-ghost">
+                <DownloadIcon className="h-4 w-4" />
+                Export CSV
+              </button>
+            </>
+          }
+        />
+      </div>
+
+      <section className="card p-4 no-print">
         <div className="flex flex-col gap-3">
           <div className="relative">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-300" />
@@ -389,7 +422,7 @@ export function AssetExplorer({
         </div>
       </section>
 
-      <section className="card overflow-hidden">
+      <section className="card overflow-hidden print:hidden">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-100 px-4 py-3">
           <p className="text-xs text-ink-500">
             <span className="font-semibold text-ink-900">
@@ -670,6 +703,46 @@ export function AssetExplorer({
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
+
+      {printReady ? (
+        <div className="hidden print:block">
+          <table className="w-full border-collapse text-[10.5px]">
+            <thead>
+              <tr className="border-b border-ink-300 text-left text-[9px] uppercase tracking-[0.08em] text-ink-600">
+                <th className="py-1.5 pr-3 font-semibold">Item</th>
+                <th className="w-12 py-1.5 pr-3 text-right font-semibold">
+                  Qty
+                </th>
+                <th className="py-1.5 pr-3 font-semibold">Room</th>
+                <th className="w-24 py-1.5 pr-3 font-semibold">Floor</th>
+                <th className="py-1.5 font-semibold">Serial / model</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map((row) => (
+                <tr key={row.id} className="border-b border-ink-100 align-top">
+                  <td className="py-1 pr-3">
+                    {row.itemName}
+                    <span className="block text-[9px] text-ink-500">
+                      {row.id}
+                    </span>
+                  </td>
+                  <td className="py-1 pr-3 text-right tabular-nums">
+                    {formatNumber(row.quantity)}
+                  </td>
+                  <td className="py-1 pr-3">{row.room}</td>
+                  <td className="py-1 pr-3">{row.floor}</td>
+                  <td className="py-1">
+                    {row.serialNo ?? "—"}
+                    {row.modelNo ? ` · ${row.modelNo}` : ""}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <PrintSignature label="Checked by" />
+        </div>
+      ) : null}
     </div>
   );
 }

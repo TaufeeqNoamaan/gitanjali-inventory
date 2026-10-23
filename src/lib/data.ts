@@ -24,10 +24,10 @@ const SHEET_NAME = process.env.GOOGLE_SHEET_NAME ?? "Sheet1";
 const SHEET_CSV_URL = process.env.GOOGLE_SHEET_CSV_URL;
 const REVALIDATE_SECONDS = Number(process.env.SHEET_REVALIDATE_SECONDS ?? 300);
 
-export const dataSource = SHEET_ID || SHEET_CSV_URL ? "google-sheets" : "snapshot";
+export const dataSource = SHEET_ID || SHEET_CSV_URL ? "live" : "snapshot";
 
 export const dataSourceLabel =
-  dataSource === "google-sheets" ? "Google Sheets (live)" : "Local snapshot";
+  dataSource === "live" ? "Live data" : "Local snapshot";
 
 const HEADER_ALIASES: Record<keyof Asset, string[]> = {
   id: ["ID", "RECORD ID"],
@@ -169,7 +169,7 @@ export const getAssets = cache(async (): Promise<Asset[]> => {
 
     if (!response.ok) {
       console.warn(
-        `[inventory] Google Sheet request failed (${response.status}); using local snapshot.`,
+        `[inventory] live source request failed (${response.status}); using local snapshot.`,
       );
       return snapshotAssets;
     }
@@ -183,18 +183,18 @@ export const getAssets = cache(async (): Promise<Asset[]> => {
     if (assets.length > 0 && hasItemColumn) {
       if (process.env.NODE_ENV !== "production") {
         console.info(
-          `[inventory] ${assets.length} rows loaded from Google Sheets`,
+          `[inventory] ${assets.length} rows loaded from the live source`,
         );
       }
       return assets;
     }
 
     console.warn(
-      "[inventory] Google Sheet response was not a recognisable asset table; using local snapshot.",
+      "[inventory] live source response was not a recognisable asset table; using local snapshot.",
     );
     return snapshotAssets;
   } catch (error) {
-    console.warn("[inventory] Google Sheet unreachable; using local snapshot.", error);
+    console.warn("[inventory] live source unreachable; using local snapshot.", error);
     return snapshotAssets;
   }
 });

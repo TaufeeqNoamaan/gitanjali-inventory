@@ -40,8 +40,9 @@ export function SidebarNav({ counts }: { counts: NavCounts }) {
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
+              title={item.label}
               className={cn(
-                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
+                "relative flex items-center rounded-xl py-2.5 pl-[17px] pr-2 text-sm font-medium transition group-hover:pl-3 group-hover:pr-3",
                 active
                   ? "bg-white/10 text-white"
                   : "text-ink-300 hover:bg-white/5 hover:text-white",
@@ -55,13 +56,17 @@ export function SidebarNav({ counts }: { counts: NavCounts }) {
               />
               <Icon
                 className={cn(
-                  "h-[18px] w-[18px] transition-colors",
-                  active ? "text-gold-300" : "text-ink-400 group-hover:text-ink-200",
+                  "h-[18px] w-[18px] shrink-0 transition-colors",
+                  active
+                    ? "text-gold-300"
+                    : "text-ink-300 group-hover:text-white",
                 )}
               />
-              <span className="flex-1">{item.label}</span>
+              <span className="ml-3 flex-1 whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
+                {item.label}
+              </span>
               {count !== null ? (
-                <span className="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-ink-400">
+                <span className="ml-auto rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-ink-400 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
                   {formatNumber(count)}
                 </span>
               ) : null}

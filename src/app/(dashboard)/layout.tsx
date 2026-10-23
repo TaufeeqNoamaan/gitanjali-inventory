@@ -9,7 +9,7 @@ export default async function AppLayout({
   const stats = summarizeAssets(assets);
 
   return (
-    <div className="min-h-screen bg-ink-50 lg:grid lg:grid-cols-[272px_minmax(0,1fr)]">
+    <div className="min-h-screen bg-ink-50">
       <Sidebar
         counts={{
           records: stats.totalRecords,
@@ -18,7 +18,7 @@ export default async function AppLayout({
         }}
       />
 
-      <div className="flex min-w-0 flex-col">
+      <div className="flex min-h-screen min-w-0 flex-col lg:pl-[76px]">
         <Topbar />
         <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 pb-14 pt-7 sm:px-6 lg:px-8">
           {children}

@@ -10,6 +10,8 @@ import {
   SectionCard,
   StatCard,
 } from "@/components/ui/primitives";
+import { PrintButton } from "@/components/print-button";
+import { PrintHeader } from "@/components/print";
 import {
   buildItemSummaries,
   buildRoomSummaries,
@@ -46,7 +48,6 @@ export default async function AnalyticsPage() {
   const floorData = stats.byFloor.map((floor) => ({
     label: floor.label,
     value: floor.units,
-    meta: `${formatNumber(floor.records)} rows`,
   }));
 
   const roomTypePie = stats.byRoomType
@@ -76,16 +77,13 @@ export default async function AnalyticsPage() {
     );
 
   const distribution = QUANTITY_BUCKETS.map((bucket) => {
-    const rows = assets.filter(
+    const entries = assets.filter(
       (asset) =>
         asset.quantity >= bucket.min && asset.quantity <= bucket.max,
     );
     return {
       label: bucket.label,
-      value: rows.length,
-      meta: `${formatNumber(
-        rows.reduce((sum, row) => sum + row.quantity, 0),
-      )} units`,
+      value: entries.length,
     };
   });
 
@@ -94,17 +92,30 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        eyebrow="Insights"
+      <PrintHeader
         title="Analytics"
-        description="How the register is distributed — by floor, room type, item and record size."
-        actions={
-          <Link href="/assets" className="btn-ghost">
-            Open register
-            <ArrowUpRightIcon className="h-4 w-4" />
-          </Link>
-        }
+        subtitle="Asset distribution by floor, room type and item"
+        meta={`${formatNumber(stats.totalUnits)} units · ${formatNumber(
+          stats.totalRecords,
+        )} entries · ${formatNumber(stats.roomCount)} rooms`}
       />
+
+      <div className="no-print">
+        <PageHeader
+          eyebrow="Insights"
+          title="Analytics"
+          description="How the register is distributed — by floor, room type, item and record size."
+          actions={
+            <>
+              <PrintButton />
+              <Link href="/assets" className="btn-ghost">
+                Open register
+                <ArrowUpRightIcon className="h-4 w-4" />
+              </Link>
+            </>
+          }
+        />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -119,7 +130,7 @@ export default async function AnalyticsPage() {
           value={`${formatNumber(medianQuantity)} ${
             medianQuantity === 1 ? "unit" : "units"
           }`}
-          hint="Half of all register rows hold this many units or fewer"
+          hint="Half of all entries hold this many units or fewer"
           icon={<ChartIcon className="h-5 w-5" />}
         />
         <StatCard
@@ -127,7 +138,7 @@ export default async function AnalyticsPage() {
           value={`${formatNumber(largestQuantity)} ${
             largestQuantity === 1 ? "unit" : "units"
           }`}
-          hint="Single highest quantity in one row"
+          hint="Highest quantity recorded on a single entry"
           icon={<TagIcon className="h-5 w-5" />}
         />
         <StatCard
@@ -135,14 +146,14 @@ export default async function AnalyticsPage() {
           value={`${serialCoverage}%`}
           hint={`${formatNumber(stats.health.serialised)} of ${formatNumber(
             stats.totalRecords,
-          )} rows carry a serial or tag`}
+          )} entries carry a serial or tag`}
           icon={<QrIcon className="h-5 w-5" />}
         />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
         <SectionCard
-          className="xl:col-span-2"
+          className="xl:col-span-2 break-inside-avoid"
           title="Units by floor"
           description="Bar chart — every recorded unit grouped by level"
           bodyClassName="pt-4"
@@ -151,6 +162,7 @@ export default async function AnalyticsPage() {
         </SectionCard>
 
         <SectionCard
+          className="break-inside-avoid"
           title="Share by room type"
           description="Pie chart — where the units physically sit"
           bodyClassName="pt-6"
@@ -161,7 +173,7 @@ export default async function AnalyticsPage() {
 
       <div className="grid gap-4 xl:grid-cols-3">
         <SectionCard
-          className="xl:col-span-2"
+          className="xl:col-span-2 break-inside-avoid"
           title="Inventory concentration"
           description="Line chart — cumulative share of units held by the top 20 item types"
           bodyClassName="pt-4"
@@ -180,6 +192,7 @@ export default async function AnalyticsPage() {
         </SectionCard>
 
         <SectionCard
+          className="break-inside-avoid"
           title="What that means"
           description="A small catalogue drives most of the count"
         >
@@ -223,20 +236,20 @@ export default async function AnalyticsPage() {
       </div>
 
       <SectionCard
+        className="break-inside-avoid"
         title="Record size distribution"
-        description="Bar chart — how many register rows hold 1 unit, 2–5 units, and so on"
-        bodyClassName="pt-4"
-      >
-        <BarChart
-          data={distribution}
-          unitLabel="rows"
-          valueSuffix=""
-          height={240}
+          description="Bar chart — how many entries hold 1 unit, 2–5 units, and so on"
+          bodyClassName="pt-4"
+        >
+          <BarChart
+            data={distribution}
+            unitLabel="entries"
         />
       </SectionCard>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <SectionCard
+          className="break-inside-avoid"
           title="Top rooms by units"
           description="Horizontal bars — the heaviest rooms on campus"
           action={
@@ -260,6 +273,7 @@ export default async function AnalyticsPage() {
         </SectionCard>
 
         <SectionCard
+          className="break-inside-avoid"
           title="Top items by units"
           description="Horizontal bars — the most numerous assets"
           action={
@@ -276,9 +290,7 @@ export default async function AnalyticsPage() {
               label: item.name,
               value: item.units,
               href: `/items/${item.slug}`,
-              meta: `${formatNumber(item.rooms)} rooms · ${formatNumber(
-                item.records,
-              )} rows`,
+              meta: `${formatNumber(item.rooms)} rooms`,
             }))}
             total={stats.totalUnits}
           />

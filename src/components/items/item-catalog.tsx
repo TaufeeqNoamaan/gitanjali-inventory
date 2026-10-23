@@ -43,7 +43,7 @@ export function ItemCatalog({ items }: { items: ItemSummary[] }) {
 
   return (
     <div className="space-y-4">
-      <section className="card flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:justify-between">
+      <section className="card flex flex-col gap-3 p-4 no-print lg:flex-row lg:items-center lg:justify-between">
         <div className="relative flex-1 lg:max-w-md">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-300" />
           <input
@@ -169,7 +169,7 @@ export function ItemCatalog({ items }: { items: ItemSummary[] }) {
         )}
       </section>
 
-      <p className="flex items-center gap-2 text-[11px] text-ink-400">
+      <p className="flex items-center gap-2 text-[11px] text-ink-400 no-print">
         <Pill tone="ink">Tip</Pill>
         Select an item to see every room and floor it is spread across.
       </p>

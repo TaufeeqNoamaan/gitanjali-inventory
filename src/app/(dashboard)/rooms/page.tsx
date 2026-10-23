@@ -1,4 +1,6 @@
 import { PageHeader, StatCard } from "@/components/ui/primitives";
+import { PrintButton } from "@/components/print-button";
+import { PrintHeader } from "@/components/print";
 import { RoomsGrid } from "@/components/rooms/rooms-grid";
 import { buildRoomSummaries, getAssets, summarizeAssets } from "@/lib/data";
 import { formatNumber } from "@/lib/utils";
@@ -13,11 +15,21 @@ export default async function RoomsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        eyebrow="By location"
+      <PrintHeader
         title="Rooms"
-        description="Walk the campus floor by floor — every room, what it holds, and how many units are counted inside."
+        subtitle={`${formatNumber(stats.roomCount)} rooms · ${formatNumber(
+          stats.totalUnits,
+        )} units · ${formatNumber(stats.floorCount)} floors`}
       />
+
+      <div className="no-print">
+        <PageHeader
+          eyebrow="By location"
+          title="Rooms"
+          description="Walk the campus floor by floor — every room, what it holds, and how many units are counted inside."
+          actions={<PrintButton />}
+        />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard

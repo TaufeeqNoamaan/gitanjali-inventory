@@ -5,8 +5,8 @@ the web app (src/data/assets.json).
 Usage:
     python scripts/export_assets.py "Devakul Assets 2026-2027.xlsx"
 
-The app reads this file only when no Google Sheet is configured. Once the data
-moves to Google Sheets, set GOOGLE_SHEET_ID (see .env.example) and this script
+The app reads this file only when no live spreadsheet is configured. Once the data
+moves to the shared spreadsheet, set GOOGLE_SHEET_ID (see .env.example) and this script
 becomes an offline snapshot tool.
 """
 

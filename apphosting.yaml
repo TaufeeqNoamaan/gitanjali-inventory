@@ -25,7 +25,7 @@ runConfig:
 
 env:
   # ---------------------------------------------------------------------------
-  # Inventory source — the staff-maintained Google Sheet.
+  # Inventory source — the staff-maintained spreadsheet.
   # BUILD availability lets prerendered pages (/, /analytics, /rooms, /items)
   # start with live rows; RUNTIME keeps the 60s ISR refresh working.
   # ---------------------------------------------------------------------------

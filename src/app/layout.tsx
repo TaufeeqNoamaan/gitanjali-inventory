@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   },
   description:
     "Granular asset register for Gitanjali Schools — track furniture, IT hardware, lab equipment and classroom assets across every room of the Devakul campus.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

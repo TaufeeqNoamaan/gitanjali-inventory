@@ -43,7 +43,7 @@ export function RoomsGrid({ rooms }: { rooms: RoomSummary[] }) {
 
   return (
     <div className="space-y-5">
-      <section className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+      <section className="card flex flex-col gap-3 p-4 no-print sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-300" />
           <input
@@ -127,7 +127,7 @@ export function RoomsGrid({ rooms }: { rooms: RoomSummary[] }) {
                     <Link
                       key={room.slug}
                       href={`/rooms/${room.slug}`}
-                      className="card group flex min-w-0 flex-col justify-between p-4 transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-lift"
+                      className="card group flex min-w-0 break-inside-avoid flex-col justify-between p-4 transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-lift"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">

@@ -86,7 +86,7 @@ export function AssetDrawer({
     .sort((a, b) => b.quantity - a.quantity);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex justify-end print:hidden">
       <button
         type="button"
         aria-label="Close details"

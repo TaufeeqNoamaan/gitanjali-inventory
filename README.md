@@ -6,8 +6,8 @@ browsable register: every floor, every room, every item, down to individual seri
 numbers.
 
 Built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS** and no
-runtime database. Data comes from the bundled Excel snapshot today and from Google
-Sheets tomorrow, with a single environment variable switch.
+runtime database. Data comes from the bundled Excel snapshot today and from a live
+spreadsheet tomorrow, with a single environment variable switch.
 
 ---
 
@@ -62,7 +62,7 @@ Devakul Assets 2026-2027.xlsx
         ▼
 src/data/assets.json  ──►  src/lib/data.ts  ──►  pages & components
                                    ▲
-                     Google Sheets │ (optional, live)
+                     Spreadsheet │ (optional, live)
 ```
 
 ### Regenerating the snapshot from Excel
@@ -76,7 +76,7 @@ casing, derives the **floor** from the room code (`CF-*` → Cellar, `GF-*` → 
 Floor, …) and classifies each **room type** (Classroom, Laboratory, Store Room,
 Corridor, Office, Hall, …).
 
-### Switching to Google Sheets
+### Switching to a live spreadsheet
 
 This repo is already pointed at the staff-maintained sheet through `.env.local`
 (git-ignored):
@@ -98,7 +98,7 @@ GOOGLE_SHEET_NAME=Sheet1
 ```
 
 When `GOOGLE_SHEET_ID` is set, `src/lib/data.ts` fetches the tab as CSV from the
-Google Sheets endpoint every `SHEET_REVALIDATE_SECONDS` (default 300s), applies the
+spreadsheet endpoint every `SHEET_REVALIDATE_SECONDS` (default 300s), applies the
 same normalisation, and falls back to the bundled snapshot if the sheet is
 unreachable. Header names are matched flexibly (`QTY`/`QUANTITY`,
 `PRESENT ALLOTED ROOM`/`ROOM`, …), so small column renames won't break the app.
@@ -139,7 +139,7 @@ Two config files are checked in:
 What the config does:
 
 - `runConfig` — 1 CPU, 1 GiB, 0–10 instances, concurrency 80.
-- `env` — Google Sheet id/name, refresh interval, admin credentials, `AUTH_SECRET`
+- `env` — spreadsheet id/name, refresh interval, admin credentials, `AUTH_SECRET`
   and a telemetry opt-out. All are available at both `BUILD` and `RUNTIME` unless
   noted otherwise.
 - `AUTH_SECRET` **must** be available at build *and* runtime: Next.js inlines env
@@ -158,7 +158,7 @@ firebase apphosting:backends:create --project <your-project-id>
 Before staff start using it:
 
 1. Change `ADMIN_PASSWORD` and set your own `AUTH_SECRET` in **both** YAML files.
-2. Keep the Google Sheet shared as *Anyone with the link → Viewer*, or the app
+2. Keep the spreadsheet shared as *Anyone with the link → Viewer*, or the app
    falls back to the bundled Excel snapshot.
 3. When the repository becomes public, move the password and secret out of the
    YAML and into Cloud Secret Manager (`secret: <name>@latest`).
@@ -190,7 +190,7 @@ src/
 │  └─ ui/                 # stat cards, bar list, donut, pills
 ├─ lib/
 │  ├─ auth.ts             # session token signing/verification (Web Crypto)
-│  ├─ data.ts             # Google Sheets / snapshot loading + aggregations
+│  ├─ data.ts             # live spreadsheet / snapshot loading + aggregations
 │  ├─ normalize.ts        # row normalisation, floor & room-type derivation
 │  ├─ types.ts
 │  └─ utils.ts
@@ -214,5 +214,9 @@ src/
   card list, below `sm` the bar charts render as horizontal bars and the line chart
   drops its axis labels, and the sign-in page hides its marketing panel on phones.
   Inputs are 16px on small screens so iOS doesn't zoom on focus.
+- Print: the register, room sheet, item sheet, rooms overview, item catalogue and
+  analytics each have a **Print** action with an A4 stylesheet — letterhead, the
+  active filters, full tables (the register prints every filtered row, not just the
+  visible page) and a signature line on the physical-verification sheets.
 - Served entirely from React Server Components; only the register, room grid and
   catalogue ship client JavaScript.

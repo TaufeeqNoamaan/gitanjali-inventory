@@ -9,6 +9,8 @@ import {
   QrIcon,
   TagIcon,
 } from "@/components/icons";
+import { PrintButton } from "@/components/print-button";
+import { PrintHeader, PrintSignature } from "@/components/print";
 import { PageHeader, Pill, SectionCard, StatCard } from "@/components/ui/primitives";
 import {
   buildItemSlugMap,
@@ -46,37 +48,49 @@ export default async function RoomDetailPage({ params }: { params: Params }) {
 
   return (
     <div className="space-y-6">
-      <nav className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-ink-400">
-        <Link href="/rooms" className="hover:text-ink-700">
-          Rooms
-        </Link>
-        <ChevronRightIcon className="h-3 w-3" />
-        <Link
-          href="/rooms"
-          className="hover:text-ink-700"
-        >
-          {room.floor}
-        </Link>
-        <ChevronRightIcon className="h-3 w-3" />
-        <span className="text-ink-700">{room.room}</span>
-      </nav>
-
-      <PageHeader
-        eyebrow={`${room.floor} · ${room.roomType}`}
+      <PrintHeader
         title={room.room}
-        description={`${formatNumber(room.units)} units across ${formatNumber(
-          room.itemTypes,
-        )} item types in this room.`}
-        actions={
-          <Link
-            href={`/assets?room=${encodeURIComponent(room.room)}`}
-            className="btn-ghost"
-          >
-            <ArrowUpRightIcon className="h-4 w-4" />
-            Open in register
-          </Link>
-        }
+        subtitle={`${room.floor} · ${room.roomType} · ${formatNumber(
+          room.units,
+        )} units across ${formatNumber(room.itemTypes)} item types`}
+        meta={`Location: ${rows[0]?.location ?? "Devakul"} · Sub location: ${
+          rows[0]?.subLocation ?? "—"
+        }`}
       />
+
+      <div className="no-print">
+        <nav className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-ink-400">
+          <Link href="/rooms" className="hover:text-ink-700">
+            Rooms
+          </Link>
+          <ChevronRightIcon className="h-3 w-3" />
+          <Link href="/rooms" className="hover:text-ink-700">
+            {room.floor}
+          </Link>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-ink-700">{room.room}</span>
+        </nav>
+
+        <PageHeader
+          eyebrow={`${room.floor} · ${room.roomType}`}
+          title={room.room}
+          description={`${formatNumber(room.units)} units across ${formatNumber(
+            room.itemTypes,
+          )} item types in this room.`}
+          actions={
+            <>
+              <PrintButton />
+              <Link
+                href={`/assets?room=${encodeURIComponent(room.room)}`}
+                className="btn-ghost"
+              >
+                <ArrowUpRightIcon className="h-4 w-4" />
+                Open in register
+              </Link>
+            </>
+          }
+        />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -173,6 +187,7 @@ export default async function RoomDetailPage({ params }: { params: Params }) {
 
         <div className="space-y-4">
           <SectionCard
+            className="no-print"
             title={`Elsewhere on ${room.floor}`}
             description="Other rooms on the same level"
             bodyClassName="py-2"
@@ -230,6 +245,8 @@ export default async function RoomDetailPage({ params }: { params: Params }) {
           </SectionCard>
         </div>
       </div>
+
+      <PrintSignature />
     </div>
   );
 }

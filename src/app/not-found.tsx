@@ -1,12 +1,12 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand-logo";
+
 export default function NotFound() {
   return (
     <div className="grid min-h-screen place-items-center bg-ink-50 px-5">
       <div className="w-full max-w-md rounded-2xl border border-ink-100 bg-white p-8 text-center shadow-card">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 font-display text-xl text-ink-950">
-          G
-        </span>
+        <BrandLogo className="mx-auto h-10" priority />
         <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-600">
           404 · Not found
         </p>
